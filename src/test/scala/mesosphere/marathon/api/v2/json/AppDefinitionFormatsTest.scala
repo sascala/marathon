@@ -507,11 +507,12 @@ class AppDefinitionFormatsTest
     val appDef = normalizeAndConvert(Json.parse(
       """{
         |  "id": "test",
+        |  "cmd": "foo",
         |  "unreachableStrategy": {
         |      "unreachableInactiveAfterSeconds": 600,
         |      "unreachableExpungeAfterSeconds": 1200
         |  }
-        |}""".stripMargin).as[App])
+        |}""".stripMargin).as[raml.App])
 
     appDef.unreachableStrategy.unreachableInactiveAfter should be(10.minutes)
     appDef.unreachableStrategy.unreachableExpungeAfter should be(20.minutes)
@@ -528,11 +529,12 @@ class AppDefinitionFormatsTest
   }
 
   test("FromJSON should parse kill selection") {
-    val appDef = Json.parse(
+    val appDef = normalizeAndConvert(Json.parse(
       """{
         |  "id": "test",
+        |  "cmd": "foo",
         |  "killSelection": "YoungestFirst"
-        |}""".stripMargin).as[AppDefinition]
+        |}""".stripMargin).as[raml.App])
 
     appDef.killSelection should be(KillSelection.YoungestFirst)
   }
@@ -541,17 +543,18 @@ class AppDefinitionFormatsTest
     val json = Json.parse(
       """{
         |  "id": "test",
+        |  "cmd": "foo",
         |  "killSelection": "unknown"
         |}""".stripMargin)
     the[JsResultException] thrownBy {
-      json.as[AppDefinition]
+      normalizeAndConvert(json.as[raml.App])
     } should have message ("JsResultException(errors:List((/killSelection,List(ValidationError(List(error.expected.jsstring),WrappedArray(KillSelection (YoungestFirst, OldestFirst)))))))")
   }
 
   test("ToJSON should serialize kill selection") {
     val appDef = AppDefinition(id = PathId("test"), killSelection = KillSelection.OldestFirst)
 
-    val json = Json.toJson(appDef)
+    val json = Json.toJson(Raml.toRaml(appDef))
 
     (json \ "killSelection").as[String] should be("OldestFirst")
   }

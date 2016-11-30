@@ -63,7 +63,7 @@ types:
         format: int32
         description: Amount of time to wait until starting the health checks.
         minimum: 0
-        default: 2
+        default: 15
     usage: Must specify a single type of check, http, tcp, or exec
   AppHealthCheckProtocol:
     type: string
@@ -95,6 +95,7 @@ types:
       ignoreHttp1xx?:
         type: boolean
         description: Ignore HTTP 1xx responses
+        usage: not providing a default value to avoid seeing this field when serializing non-http checks
       intervalSeconds:
         type: integer
         format: int32
@@ -142,4 +143,4 @@ types:
         format: int32
         description: Amount of time to wait until starting the health checks.
         minimum: 0
-        default: 2
+        default: 15

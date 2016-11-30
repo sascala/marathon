@@ -77,7 +77,7 @@ class TaskLostIntegrationTest extends AkkaIntegrationFunTest with EmbeddedMarath
 
     And("A replacement task is started")
     waitForEventWith("status_update_event", _.info("taskStatus") == "TASK_RUNNING")
-    val tasks = marathon.tasks(app.id).value
+    val tasks = marathon.tasks(app.id.toPath).value
     tasks should have size 2
     tasks.groupBy(_.state).keySet should be(Set("TASK_RUNNING", "TASK_UNREACHABLE"))
     val replacement = tasks.find(_.state == "TASK_RUNNING").get
