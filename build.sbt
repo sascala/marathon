@@ -135,7 +135,7 @@ lazy val commonSettings = inConfig(SerialIntegrationTest)(Defaults.testTasks) ++
 
   fork in IntegrationTest := true,
   testOptions in IntegrationTest := Seq(formattingTestArg(target.value / "test-reports" / "integration"),
-    Tests.Argument("-n", "mesosphere.marathon.IntegrationTest", "-l", "mesosphere.marathon.UnstableTest")),
+    Tests.Argument("-n", "mesosphere.marathon.IntegrationTest", "-l" "mesosphere.marathon.SerialIntegrationTest mesosphere.marathon.UnstableTest")),
   parallelExecution in IntegrationTest := true,
   testForkedParallel in IntegrationTest := true,
   test in IntegrationTest := {
